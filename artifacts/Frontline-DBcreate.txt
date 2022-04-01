@@ -1,0 +1,170 @@
+--
+-- UiMeta table holds the metadata information about GUI fields.
+-- This table allows the admin to update the text/wording of individual GUI
+-- components, such as table column names.
+--
+CREATE TABLE UiMeta(
+    ElementId VARCHAR(30) NOT NULL,
+    ElementName VARCHAR(50) NOT NULL,
+    PRIMARY KEY (ElementId)
+);
+
+--
+-- UserRegistrationFields table holds additional fields that the admin can
+-- add/remove from the user registration form.
+--
+CREATE TABLE UserRegistrationFields(
+    FieldId VARCHAR(30) NOT NULL,
+    Name VARCHAR(50) NOT NULL,
+    DisplayType VARCHAR(30) NOT NULL,
+    HelpText VARCHAR(100),
+    DisplayIndex INT DEFAULT 0,
+    IsRequired BOOLEAN DEFAULT FALSE,
+    IsEnabled BOOLEAN DEFAULT TRUE,
+    PRIMARY KEY (FieldId)
+);
+--
+-- UserRole table holds the various roles that a user can hold.
+-- This table allows the Admin to add new roles, modify role names and
+-- add role descriptions.
+--
+CREATE TABLE UserRole(
+    RoleId VARCHAR(30) NOT NULL,
+    Name VARCHAR(50) NOT NULL,
+    Description VARCHAR(255),
+    PRIMARY KEY (RoleId)
+);    
+
+--
+-- UserInfo table holds the basic user information
+--
+CREATE TABLE UserInfo(
+    UserId SERIAL,
+    UserEmail VARCHAR(100) NOT NULL,
+    Passwrd VARCHAR(100) NOT NULL,
+    PhoneNumber INT NOT NULL,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    CreatedDate DATETIME NOT NULL,
+    RoleId VARCHAR(30) NOT NULL,
+    IsEnabled BOOLEAN DEFAULT TRUE,
+    IsApproved BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (UserId),
+    CONSTRAINT UniqueEmail UNIQUE (UserEmail),
+    FOREIGN KEY (RoleId) REFERENCES UserRole(RoleId)
+);
+
+--
+-- UserInfoExtend table holds additional user information that can be extended
+-- at any point by adding/
+--
+CREATE TABLE UserInfoExtend(
+    UserId INT NOT NULL,
+    FieldId VARCHAR(30) NOT NULL,
+    FieldValue VARCHAR(50),
+    PRIMARY KEY (UserId, FieldId),
+    FOREIGN KEY (FieldId) REFERENCES UserRegistrationFields(FieldId)
+);
+
+--
+-- UserNotification table holds pending user notifications
+--
+CREATE TABLE UserNotification(
+    NotificationId SERIAL NOT NULL,
+    UserId INT NOT NULL,
+    NotificationText VARCHAR(255) NOT NULL,
+    PRIMARY KEY (UserId, NotificationId),
+    FOREIGN KEY (UserId) REFERENCES UserInfo(UserId)
+);
+
+--
+-- Course table holds the basic course information
+--
+CREATE TABLE Course(
+    CourseId SERIAL NOT NULL,
+    Index INT NOT NULL DEFAULT 0,
+    Title VARCHAR(50) NOT NULL,
+    Description TEXT,
+    IsEnabled BOOLEAN DEFAULT TRUE,
+    PRIMARY KEY (CourseId)
+);
+
+--
+-- CourseResource table holds the various resources that the course holds. this
+-- can include videos, documents, images, etc.
+--
+CREATE TABLE CourseResource(
+    ResourceId SERIAL NOT NULL,
+    CourseId INT NOT NULL,
+    Index INT NOT NULL DEFAULT 0,
+    Description TEXT,
+    Type ENUM('youtube', 'video', 'document', 'image') NOT NULL,
+    URL TEXT NOT NULL,
+    URLDescription VARCHAR(100),
+    PRIMARY KEY (CourseId, ResourceId),
+    FOREIGN KEY (CourseId) REFERENCES Course(CourseId)
+);
+
+--
+-- CourseQuestion table holds a list of questions for each individual course
+--
+CREATE TABLE CourseQuestion(
+    QuestionId SERIAL NOT NULL,
+    CourseId INT NOT NULL,
+    Index INT NOT NULL DEFAULT 0,
+    QuestionText VARCHAR(255) NOT NULL,
+    IsEnabled BOOLEAN DEFAULT TRUE,
+    PRIMARY KEY (CourseId, QuestionId),
+    FOREIGN KEY (CourseId) REFERENCES Course(CourseId)
+);
+
+--
+-- UserResponse table holds user response to CourseQuestion
+--
+CREATE TABLE UserResponse(
+    ResponseId SERIAL NOT NULL,
+    CourseId INT NOT NULL,
+    QuestionId INT NOT NULL,
+    PRIMARY KEY (ResponseId),
+    FOREIGN KEY (CourseId, QuestionId) REFERENCES CourseQuestion(CourseId, QuestionId)
+);
+
+--
+-- CourseCompletion table specifies if user has started or completed specific course.
+-- If IsComplete is false, then that's the course in-progress, otherwise that specific
+-- the course was completed.
+--
+CREATE TABLE CourseCompletion(
+    CourseId INT NOT NULL,
+    UserId INT NOT NULL,
+    IsComplete BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (CourseId, UserId),
+    FOREIGN KEY (CourseId) REFERENCES Course(CourseId),
+    FOREIGN KEY (UserId) REFERENCES UserInfo(UserId)
+);
+
+--
+-- Tracks user's savings
+--
+--
+CREATE TABLE Savings(
+    SavingsId SERIAL NOT NULL,
+    UserId INT NOT NULL,
+    amount NUMERIC(5,2) NOT NULL,
+    ficoScore INT,
+    PRIMARY KEY (SavingsId),
+    FOREIGN KEY (UserId) REFERENCES UserInfo(UserId)
+);
+
+--
+-- Tracks Savings file content
+--
+CREATE TABLE SavingsContent(
+    ContentId SERIAL NOT NULL,
+    SavingsId INT NOT NULL,
+    UserId INT NOT NULL,
+    FileName VARCHAR(100),
+    Content BLOB,
+    PRIMARY KEY (ContentId)
+    FOREIGN KEY (SavingsId) REFERENCES Savings(SavingsId)
+)

@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block login %}
+
+	<form method="POST" action"">
+		{{ form.hidden_tag() }}
+        <fieldset>
+            <legend>Frontline Login</legend>
+            <center><br />
+                {{ form.email.label }}
+                {% if form.email.errors %}
+                {%for error in form.email.errors %}
+                <span> {{ error }} </span>
+                {% endfor %}
+                {% endif %}
+                {{ form.email}}
+                <br /><br />
+                {{ form.password.label }}
+                {% if form.password.errors %}
+                {%for error in form.password.errors %}
+                <span> {{ error }} </span>
+                {% endfor %}
+                {% endif %}
+                {{ form.password}}
+            </center>
+        </fieldset>
+{{ form.submit(class="login_btn")}} 
+	</form>
+    <center><br /><br />
+        New User?
+        <br />
+        <a href="/register">Create an Account</a>
+    </center>
+{% endblock login %}
