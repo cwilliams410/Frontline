@@ -441,7 +441,7 @@
     overflow: hidden;
     width: 80%;
     Min-Height: 600px;
-    background-color: white;
+    background-color: black;
     float: left;
 }
 
@@ -784,6 +784,11 @@ th, td {
 	{
 		color: rgba(0,0,0,0.8);
 	}
+    .welcome-strip{
+        background:white;
+        width:150px;
+        overflow:hidden;
+    }
 
 /*********************************************************************************/
 /* Page                                                                          */
@@ -1073,8 +1078,6 @@ th, td {
             .smbottom {
 		display:flex;
 		position:relative;
-            }
-
             }
 
 

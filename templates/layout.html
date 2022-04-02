@@ -41,6 +41,10 @@ Released   : 20131223
 
 <div id="banner">
     <div id="banner_left">
+
+        {% block userMenu %}
+        {% endblock userMenu %}
+
         <table width="200" align="top" style="vertical-align: top;" style="border:collapse">
             <tr>
                 <td bgcolor="white" border="0">
@@ -52,15 +56,44 @@ Released   : 20131223
                     {% endif %}
                     {% endwith %}
                     {{ status2 }}
+
                 </td>
                 <td>
                     {{ status3 }}
                 </td>
+            </tr>
+            <tr>
                 <td bgcolor="#FFFFFF" align="right" style="padding:10px;">
+                    {% if Role == "Volunteer" %}
+
+                    <li><a href='Monthly_ado'>Add a Course</a></li>
+                    <li><a href='Expense_ans'>View Courses</a></li>
+                    <li><a href='Volunteer_lo'>View Users</a></li>
+                    <li><a href='Volunteer_lo'>View Savings</a></li>
+
+                    {% elif Role == "Admin" %}
+
+                    <li><a href='Animal_con'>Add a User</a></li>
+                    <li><a href='Monthly_ado'>Add a Course</a></li>
+                    <li><a href='Expense_ans'>Manage Courses</a></li>
+                    <li><a href='Expense_ans'>Manage Users</a></li>
+                    <li><a href='Volunteer_lo'>Approve Savings</a></li>
+                    <li><a href='Volunteer_lo'>Approve Users</a></li>
+                    <li><a href='Volunteer_lo'>Reports</a></li>
+
+                    {% else %}
+
+                    <li><a href='Animal_con'>Start A Course</a></li>
+                    <li><a href='Monthly_ado'>Add Savings</a></li>
+                    <li><a href='Expense_ans'>Check Savings Goals</a></li>
+
+                    {% endif %}
 
                     {{ status }}
                     {% block login %}
                     {% endblock login %}
+
+
 
                 </td>
             </tr>

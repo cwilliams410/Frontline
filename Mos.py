@@ -32,7 +32,6 @@ dbconn = MySQLdb.connect(host="frontlinemysql1.mysql.database.azure.com", user="
 def home():
     if  'username' in session:
         username = session['username']
-        return redirect('dashboard')
         return render_template('index.html')
     else:
         return redirect('login')
@@ -84,14 +83,17 @@ def login():
 		cur.execute(sql)
 		dataresults = cur.fetchall()
 		#Validate form submission and that sql returns at least one row Since email is unique we should never get more than 1
-		if form.validate_on_submit() and len(dataresults) > 0:
-			flash('Logged in as: {form.email.data}!', 'success')
+		if form.validate_on_submit() and len(dataresults) == 1:
 			session['username'] = str(uid);
-			return redirect('dashboard')
+			sql2 = "SELECT * FROM UserInfo WHERE UserEmail='" + uid + "'"
+			cur.execute(sql2)
+			dataresults = cur.fetchone()
+			return redirect(url_for('dashboard' ))
+			return render_template('dashboard.html', title='Frontline Savings Dashboard', uid = uid, dresult=dataresults)
 		else:
 			#redirect to login page if login unsuccessful
-			flash('Login Unsuccessful. Please check credentials and try again', 'danger')
-		return render_template('login.html', title='loginForm', form=form)
+			flash('Login Unsucessful')
+			return render_template('login.html', title='loginForm', form=form)
 	else:
 		return render_template('login.html', title='loginForm', form=form)
 
@@ -110,11 +112,22 @@ def dashboard():
 		cur = mysql.connection.cursor()
 		cur2 = mysql.connection.cursor()
 		cur3 = mysql.connection.cursor()
+		sql = "SELECT * FROM UserInfo WHERE UserEmail='" + username + "'"
+		cur.execute(sql)
+		dataresults = cur.fetchone()
+		nowRole = dataresults["RoleId"]
+		sql = "SELECT RoleName FROM userRole WHERE roleId ='" + str(nowRole) + "'"
+		cur.execute(sql)
+		d2 = cur.fetchone()
+		currole = d2["RoleName"]
+
+
+		return render_template('dashboard.html',  dresult=dataresults, Role=currole)
+
 	else:
 		return redirect(url_for('login' ))
 
 
-	return render_template('dashboard.html', status=addbutton, dresults=dogresults, status2=status2, status3=status3)
 
 
 
