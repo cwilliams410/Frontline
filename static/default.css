@@ -58,6 +58,26 @@
 		margin: 0px auto;
 		width: 100%;
 	}
+
+
+
+/*********************************************************************************/
+/* Flash Messages                                                                  */
+/*********************************************************************************/
+
+    .error{
+        background:red;
+        color:white;
+        align-content:center;
+    }
+
+    .success {
+        background: green;
+        color: white;
+        align-content: center;
+    }
+
+
 	
 
 /*********************************************************************************/
@@ -441,7 +461,7 @@
     overflow: hidden;
     width: 80%;
     Min-Height: 600px;
-    background-color: white;
+    background-color: gray;
     float: left;
 }
 
@@ -549,7 +569,6 @@
 
     .frm-drpdn {
         width: 160px;
-        height:20px;
         margin: auto;
     }
 

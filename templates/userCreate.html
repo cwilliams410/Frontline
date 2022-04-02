@@ -1,10 +1,7 @@
 {% extends "layout.html" %}
-{% block register %}
+{% block userCreate %}
 	<div class="limiter">
         <div class="container-table100">
-            <div id="formentry">
-                <small> Already have an account? <a class="ml-2" href="{{ url_for('login') }}"> Login </a></small>
-            </div>
             <div class="wrap-table100">
                 <div class="table100 ver2 m-b-110">
                     <table data-vertable="ver2">
@@ -15,7 +12,6 @@
                                         {{ form.hidden_tag() }}
                                         <fieldset>
                                             <legend>Create User Account</legend>
-
                                             <div id="formentry">
                                                 {{ form.UserName.label (class="frm-lbl")}}
                                                 {% if form.UserName.error %}
@@ -84,18 +80,19 @@
                                                 {% endif %}
                                                 {{ form.PhoneNumber  (class="frm-inpt")}}
                                             </div>
-
                                             <div id="formentry">
-                                                <small>Complete Signup</small>{{ form.submit(class="add_btn")}} &nbsp;
+
+                                                {{ form.UserRole.label (class="frm-lbl")}}
+                                                <br>
+                                                {{ form.UserRole(rows=6, multiple=False, class="frm-drpdn") }}
+
                                             </div>
+                                            <div id="formentry">
 
+                                                <small>Create User</small>{{ form.submit(class="add_btn")}} &nbsp;
+                                            </div>
                                         </fieldset>
-
-
-
                                     </form>
-
-
                                 </td>
                             </tr>
                         </tbody>
@@ -104,4 +101,4 @@
             </div>
         </div>
 	</div>
-{% endblock register %}
+{% endblock userCreate %}

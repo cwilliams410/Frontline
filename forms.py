@@ -5,6 +5,7 @@ from wtforms.widgets import TextArea
 from wtforms.fields import EmailField
 
 
+
 class UserRegistrationForm(FlaskForm):
 	UserName = StringField('UserName', validators=[DataRequired()])
 	Email = EmailField('Email Address', validators=[DataRequired(), Email()])
@@ -25,7 +26,7 @@ class UserCreationForm(FlaskForm):
 	FirstName = StringField('FirstName', validators=[DataRequired()])
 	LastName = StringField('LastName', validators=[DataRequired()])
 	PhoneNumber = StringField('PhoneNumber', validators=[DataRequired(), Length(min=10, max=16)])
-	UserRole = SelectField('Select A Role for this User', choices=[])
+	UserRole = SelectField('Select A User Role', choices=[])
 	submit = SubmitField(' ')
 
 

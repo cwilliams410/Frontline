@@ -51,7 +51,7 @@ Released   : 20131223
                     {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                     {% for category, message in messages %}
-                    {{ message }}
+                    <div class="{{ category }}">{{ message }}</div>
                     {% endfor %}
                     {% endif %}
                     {% endwith %}
@@ -60,33 +60,35 @@ Released   : 20131223
                 </td>
                 <td>
                     {{ status3 }}
+
                 </td>
             </tr>
             <tr>
                 <td bgcolor="#FFFFFF" align="right" style="padding:10px;">
-                    {% if Role != "Volunteer" %}
+                    {% if RoleId is defined %}
+                        {% if RoleId == "Volunteer" %}
 
-                    <li><a href='Monthly_ado'>Add a User</a></li>
-                    <li><a href='Expense_ans'>View Courses</a></li>
-                    <li><a href='Volunteer_lo'>View Users</a></li>
-                    <li><a href='Volunteer_lo'>View Savings</a></li>
+                        <li><a href='Monthly_ado'>Add a User</a></li>
+                        <li><a href='Expense_ans'>View Courses</a></li>
+                        <li><a href='Volunteer_lo'>View Users</a></li>
+                        <li><a href='Volunteer_lo'>View Savings</a></li>
 
-                    {% elif Role == "Volunteer" %}
+                        {% elif RoleId == "Admin" %}
 
-                    <li><a href='createUser'>Add a User</a></li>
-                    <li><a href='Monthly_ado'>Add a Course</a></li>
-                    <li><a href='Expense_ans'>Manage Courses</a></li>
-                    <li><a href='Expense_ans'>Manage Users</a></li>
-                    <li><a href='Volunteer_lo'>Approve Savings</a></li>
-                    <li><a href='Volunteer_lo'>Approve Users</a></li>
-                    <li><a href='Volunteer_lo'>Reports</a></li>
+                        <li><a href='createUser'>Add a User</a></li>
+                        <li><a href='Expense_ans'>Manage Users</a></li>
+                        <li><a href='Monthly_ado'>Add a Course</a></li>
+                        <li><a href='Expense_ans'>Manage Courses</a></li>
+                        <li><a href='Volunteer_lo'>Approve Savings</a></li>
+                        <li><a href='Volunteer_lo'>Reports</a></li>
 
-                    {% else %}
+                        {% else %}
 
-                    <li><a href='Animal_con'>Start A Course</a></li>
-                    <li><a href='Monthly_ado'>Add Savings</a></li>
-                    <li><a href='Expense_ans'>Check Savings Goals</a></li>
+                        <li><a href='Animal_con'>Start A Course</a></li>
+                        <li><a href='Monthly_ado'>Add Savings</a></li>
+                        <li><a href='Expense_ans'>Check Savings Goals</a></li>
 
+                        {% endif %}
                     {% endif %}
 
                     {{ status }}
