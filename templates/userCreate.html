@@ -81,10 +81,15 @@
                                                 {{ form.PhoneNumber  (class="frm-inpt")}}
                                             </div>
                                             <div id="formentry">
+                                                {% if RoleId == 'Admin' %}
 
                                                 {{ form.UserRole.label (class="frm-lbl")}}
                                                 <br>
                                                 {{ form.UserRole(rows=6, multiple=False, class="frm-drpdn") }}
+
+                                                {% else %}
+                                                <input type="hidden" id="UserRole" name="UserRole" value="3">
+                                                {% endif %}
 
                                             </div>
                                             <div id="formentry">

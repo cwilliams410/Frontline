@@ -5,6 +5,12 @@
 		<div class="container-table100">
 			<div class="wrap-table100">
 				<div class="table100 ver2 m-b-110">
+
+                    <div class="actionMsg">
+                        {% if actionmsg is defined %}
+                        {{ actionmsg }}
+                        {% endif %}
+                    </div>
                     <div class="welcome-strip">
                         Welcome Back
                         {{ FirstName }}

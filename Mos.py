@@ -12,11 +12,14 @@ import decimal
 import email_validator
 
 app = Flask(__name__)
-global RoleId2
+global RoleId
+global fname
+global status2
+global status3
 
 #CSRF secret key to stop cross site request forgery
 app.config['SECRET_KEY'] = 'e136d68bbc12329abd9a8ebe64d58d20'
-app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=1)
+app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=5)
 
 
 #Mysql configs to enable DB connectivity
@@ -29,7 +32,7 @@ mysql = MySQL(app)
 
 dbconn = MySQLdb.connect(host="frontlinemysql1.mysql.database.azure.com", user="zlupmisjwe", passwd="4GJOZZ651ELRSO6D$", db="savings_education")
 
-#query to populate breed list from DB
+#query to populate Role list from DB
 def getroles():
 	cur = mysql.connection.cursor()
 	sql = "SELECT * from UserRole"
@@ -38,7 +41,7 @@ def getroles():
 	roleresults = cur.fetchall()
 	return roleresults
 
-#query to populate breed list from DB
+#query to populate role details from DB
 def getroledeets(roleid):
 	cur = mysql.connection.cursor()
 	sql = "SELECT * from UserRole WHERE RoleId = " + str(roleid)
@@ -48,7 +51,7 @@ def getroledeets(roleid):
 	return roledeets
 
 
-#query to populate breed list from DB
+#query to populate user details
 def getuserdet(uid):
 	cur = mysql.connection.cursor()
 	sql = "SELECT * from UserInfo WHERE UserEmail = '" + uid + "'"
@@ -65,24 +68,22 @@ def getuserdet(uid):
 def home():
     if  'username' in session:
         username = session['username']
-        return render_template('index.html', uid=username)
+
+        return redirect('dashboard')
     else:
         return redirect('login')
 
 
 
-#route for User Registration
+#route for User Registration (Self Registration)
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
 	form = UserRegistrationForm()
 	if request.method != 'POST':
 		return render_template('register.html', title='Register for an Account', form=form)
 	else:
-		#Need to add Sql query and validators here
 		form = UserRegistrationForm()
-		print("We started the form")
 		if form.validate_on_submit():
-			print("the form was validated")
 			today = date.today();AppDate = date.today();d1 = today.strftime("%Y-%m-%d")
 			Email = request.form['Email']
 			FirstName = request.form['FirstName']
@@ -99,10 +100,8 @@ def register():
 			flash(message, 'success')
 			form2 = LoginForm()
 			return redirect('login')
-			return render_template('login.html', title='Login to your account!', form=form2)
 		else:
 			return render_template('register.html', title='Registration Failed -- Try Again')
-		return render_template('register.html', title='Registration Failed -- Try Again')
 
 
 
@@ -112,33 +111,38 @@ def createUser():
 	form = UserCreationForm()
 	if  'username' in session:
 		uid = session['username']
+		RoleId = session['role']
 		if request.method != 'POST':
-			getroles()
-			i=0;
-			for row in (roleresults):
-				roleval = str(row['RoleName']);
-				roleid = str(row['RoleId']);
-				i = i + 1;
-				form.UserRole.choices += [(roleid, roleval)]
-			return render_template('userCreate.html', title='Create a User Account', form=form)
+			if RoleId == "Admin":
+				getroles()
+				i=0;
+				for row in (roleresults):
+					roleval = str(row['RoleName']);
+					roleid = str(row['RoleId']);
+					i = i + 1;
+					form.UserRole.choices += [(roleid, roleval)]
+			status2 = 'Logged in as: ' + session['firstname']
+			status3 = 'User Mode: ' + session['role']
+			return render_template('userCreate.html', title='Create a User Account', form=form ,msg1=status2, msg2=status3, RoleId = RoleId)
 		else:
-			RoleId2 = request.form['UserRole']
-			print("this is the admin value: " + request.form['UserRole'])
 			today = date.today();AppDate = date.today();d1 = today.strftime("%Y-%m-%d")
 			Email = request.form['Email']
 			FirstName = request.form['FirstName']
 			LastName = request.form['LastName']
 			Phone = request.form['PhoneNumber']
 			Passwrd = request.form['password']
-			RoleId2 = request.form['UserRole']
+			if request.form['UserRole'] is None:
+				RoleId2=1
+			else:
+				RoleId2 = request.form['UserRole']
 			cur = mysql.connection.cursor()
 			print("we are about to execute some SQL")
 			cur.execute("Insert Into UserInfo (UserEmail, Passwrd, PhoneNumber, FirstName, LastName, CreatedDate, RoleId, IsEnabled, IsApproved) Values(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(str(Email), str(Passwrd), str(Phone), str(FirstName),str(LastName), str(AppDate), int(RoleId2), True, False))
 			mysql.connection.commit()
 			cur.close()
-			flash('Account created for {form.Email}!')
+			actionmsg = 'Account created for: ' + FirstName + " " + LastName + " with Email Address: " + Email
 			getuserdet(uid)
-			return render_template('dashboard.html', title='Frontline Savings Dashboard', uid = uid, dresult=uresults)
+			return render_template('dashboard.html', title='Frontline Savings Dashboard', uid = uid, RoleId=RoleId, actionmsg = actionmsg)
 	else:
 		return redirect('login')
 
@@ -172,12 +176,14 @@ def login():
 				currole = dataresults["RoleId"]
 				getroledeets(currole)
 				session['role'] = roledeets["RoleName"]
-				print(session)
 				session['username'] = str(uid);
 				session['firstname'] = dataresults["FirstName"]
 				message = "Login successful for " + str(uid)
+				RoleId = session['role']
+				print("we are catching RoleId: " + RoleId)
+				fname = session['firstname']
 				flash(message, 'success')
-				return redirect(url_for('dashboard' ))
+				return redirect(url_for('dashboard'))
 			else:
 				#redirect to login page if login unsuccessful
 				flash('Login Unsucessful', 'error')
@@ -196,9 +202,10 @@ def dashboard():
 	if  'username' in session:
 		username = session['username']
 		RoleId = session['role']
-		status2 = 'Logged in as: ' + username
+		status2 = 'Logged in as: ' + session['firstname']
+		status3 = 'User Mode: ' + session['role']
 
-		return render_template('dashboard.html', status2=status2, RoleId=RoleId)
+		return render_template('dashboard.html', msg1=status2, msg2=status3, RoleId=RoleId)
 	else:
 		return redirect(url_for('login' ))
 
