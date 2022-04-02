@@ -26,6 +26,17 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
 dbconn = MySQLdb.connect(host="frontlinemysql1.mysql.database.azure.com", user="zlupmisjwe", passwd="4GJOZZ651ELRSO6D$", db="savings_education")
+
+#query to populate breed list from DB
+def getroles():
+	cur = mysql.connection.cursor()
+	sql = "SELECT * from UserRole"
+	cur.execute(sql)
+	global roleresults
+	roleresults = cur.fetchall()
+	return roleresults
+
+
 #route for root and home
 @app.route('/')
 @app.route('/home')
@@ -38,7 +49,7 @@ def home():
 
 
 
-#route for User Creation
+#route for User Registration
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
 	form = UserRegistrationForm()
@@ -57,6 +68,43 @@ def register():
 			Phone = request.form['PhoneNumber']
 			Passwrd = request.form['password']
 			RoleId2 = 3
+			cur = mysql.connection.cursor()
+			print(cur)
+			cur.execute("Insert Into UserInfo (UserEmail, Passwrd, PhoneNumber, FirstName, LastName, CreatedDate, RoleId, IsEnabled, IsApproved) Values(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(str(Email), str(Passwrd), str(Phone), str(FirstName),str(LastName), str(AppDate), int(RoleId2), True, False))
+			mysql.connection.commit()
+			cur.close()
+			flash('Account created for {form.email.data}!', 'success')
+			return render_template('login.html', title='Login to your account!', senderval = FirstName)
+		else:
+			return render_template('register.html', title='Registration Failed -- Try Again')
+		return render_template('register.html', title='Registration Failed -- Try Again')
+
+
+
+#route for User Creation
+@app.route('/createUser', methods = ['GET', 'POST'])
+def createUser():
+	form = UserCreationForm()
+	if request.method != 'POST':
+		getroles()
+		i=0;
+		for row in (roleresults):
+			roleval = str(row['RoleName']);
+			roleid = str(row['RoleId']);
+			i = i + 1;
+			form.UserRole.choices += [(roleid, roleval)]
+		return render_template('userCreate.html', title='Create a User Account', form=form)
+	else:
+		#Need to add Sql query and validators here
+		form = UserRegistrationForm()
+		if form.validate_on_submit():
+			print("the form was validated")
+			today = date.today();AppDate = date.today();d1 = today.strftime("%Y-%m-%d")
+			Email = request.form['Email']
+			FirstName = request.form['FirstName']
+			LastName = request.form['LastName']
+			Phone = request.form['PhoneNumber']
+			Passwrd = request.form['password']
 			cur = mysql.connection.cursor()
 			print(cur)
 			cur.execute("Insert Into UserInfo (UserEmail, Passwrd, PhoneNumber, FirstName, LastName, CreatedDate, RoleId, IsEnabled, IsApproved) Values(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(str(Email), str(Passwrd), str(Phone), str(FirstName),str(LastName), str(AppDate), int(RoleId2), True, False))

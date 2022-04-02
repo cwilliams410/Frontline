@@ -64,16 +64,16 @@ Released   : 20131223
             </tr>
             <tr>
                 <td bgcolor="#FFFFFF" align="right" style="padding:10px;">
-                    {% if Role == "Volunteer" %}
+                    {% if Role != "Volunteer" %}
 
-                    <li><a href='Monthly_ado'>Add a Course</a></li>
+                    <li><a href='Monthly_ado'>Add a User</a></li>
                     <li><a href='Expense_ans'>View Courses</a></li>
                     <li><a href='Volunteer_lo'>View Users</a></li>
                     <li><a href='Volunteer_lo'>View Savings</a></li>
 
-                    {% elif Role == "Admin" %}
+                    {% elif Role == "Volunteer" %}
 
-                    <li><a href='Animal_con'>Add a User</a></li>
+                    <li><a href='createUser'>Add a User</a></li>
                     <li><a href='Monthly_ado'>Add a Course</a></li>
                     <li><a href='Expense_ans'>Manage Courses</a></li>
                     <li><a href='Expense_ans'>Manage Users</a></li>
@@ -112,6 +112,10 @@ Released   : 20131223
 
         {% block register %}
         {% endblock register %}
+
+
+        {% block userCreate %}
+        {% endblock userCreate %}
 
         {% block content %}
         {% endblock %}

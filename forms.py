@@ -25,7 +25,7 @@ class UserCreationForm(FlaskForm):
 	FirstName = StringField('FirstName', validators=[DataRequired()])
 	LastName = StringField('LastName', validators=[DataRequired()])
 	PhoneNumber = StringField('PhoneNumber', validators=[DataRequired(), Length(min=10, max=16)])
-	IsAdmin = SelectField('Select User Role', choices=[('', 'Select an Option'),('1', 'Admin'), ('2', 'Volunteer'), ('3', 'User')])
+	UserRole = SelectField('Select A Role for this User', choices=[])
 	submit = SubmitField(' ')
 
 

@@ -441,7 +441,7 @@
     overflow: hidden;
     width: 80%;
     Min-Height: 600px;
-    background-color: black;
+    background-color: white;
     float: left;
 }
 
@@ -547,15 +547,19 @@
 		margin: auto;
 	}
 
+    .frm-drpdn {
+        width: 160px;
+        height:20px;
+        margin: auto;
+    }
+
+
 /*********************************************************************************/
 /* formbottom                                                                   */
 /*********************************************************************************/
-
-	.formbottom  
-	{
-		position:relative
-		bottom:-40px;
-	}
+.formbottom {
+    position: relative bottom:-40px;
+}
 
 
 
