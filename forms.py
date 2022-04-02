@@ -59,46 +59,13 @@ class EditDogForm(FlaskForm):
 
 
 class EditUserForm(FlaskForm):
-	MicrochipID = StringField('MicrochipID')
-	IsFixed = SelectField('Dog Altered Status (Fixed)', choices=[('', 'Select an Option'),('1', 'Yes'), ('0', 'No')], validators=[DataRequired()])
-	DogSex = SelectField('Dog Breed', choices=[('', 'Select an Option'),('Male', 'Male'), ('Female', 'Female')], validators=[DataRequired()])
-	DogBreed = SelectField('Select Applicable Dog Breed(s)', validators=[DataRequired()], choices=[])
-	submit = SubmitField('Complete Edit')
+	userEmail = EmailField('Email Address', validators=[DataRequired(), Email()])
+	userRole = SelectField('Change User Role?', choices=[])
+	IsApproved = SelectField('Savings Program Status', choices=[('', 'Select an Option'),('0', 'False'), ('1', 'True')], validators=[DataRequired()])
+	IsEnabled = SelectField('Account Enabled Status', choices=[('', 'Select an Option'),('0', 'False'), ('1', 'True')], validators=[DataRequired()])
+	FirstName = StringField('FirstName', validators=[DataRequired()])
+	LastName = StringField('LastName', validators=[DataRequired()])
+	PhoneNumber = StringField('PhoneNumber', validators=[DataRequired(), Length(min=10, max=16)])
+	submit = SubmitField('')
 
 
-
-class AddExpenseForm(FlaskForm):
-	ExpenseDescription = StringField('Enter an Expense Description', widget=TextArea())
-	ExpenseAmount = StringField('Enter an Expense Amount $:', validators=[DataRequired()])
-	VendorName = SelectField('Select A Vendor', validators=[DataRequired()], choices=[])
-	submit = SubmitField(' ')
-
-
-class AddUserForm(FlaskForm):
-	Username = StringField('Enter an Expense Description', widget=TextArea())
-	Email = StringField('Enter an Expense Amount $:', validators=[DataRequired()])
-	Password = SelectField('Select A Vendor', validators=[DataRequired()], choices=[])
-	submit = SubmitField(' ')
-	
-
-class AdoptionApplicationForm(FlaskForm):
-	AdopterEmail = StringField('Enter Adopter\'s Email Address: ', validators=[DataRequired()])
-	AdopterFName= StringField('Enter Adopter\'s First Name:', validators=[DataRequired()])
-	AdopterLName = StringField('Enter Adopter\'s Last Name', validators=[DataRequired()])
-	AdPhoneNumber = StringField('Enter Adopter\'s Phone Number', validators=[DataRequired()])
-	Street = StringField('Street Address:', validators=[DataRequired()])
-	City = StringField('City', validators=[DataRequired()])
-	State = StringField('State', validators=[DataRequired()])
-	Zip = StringField('ZipCode:', validators=[DataRequired()])
-	Co_Fname = StringField('Co Applicant First Name', validators=[DataRequired()])
-	Co_Lname = StringField('Co Applicant Last Name', validators=[DataRequired()])
-	submit = SubmitField('Add Application ')
-
-class appreviewform2 (FlaskForm):
-    appreview = SelectField('Review App', choices = [('','Select an Option'),('Accept','Accept'),('Reject','Reject')], validators=[DataRequired()])
-    submit = SubmitField('Complete Review')
-
-class addadoptionForm(FlaskForm):
-	AdopterLname = StringField('Applicant Last Name:')
-	co_lname = StringField('CoApplicant Last Name:')
-	submit = SubmitField('Find Applicant')

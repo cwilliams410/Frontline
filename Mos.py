@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, url_for, flash, redirect, session, escape, Markup
-from forms import UserCreationForm, UserRegistrationForm, LoginForm, AddDogForm, EditDogForm, AddExpenseForm, AddUserForm, addadoptionForm,AdoptionApplicationForm, appreviewform2, EditUserForm
+from forms import UserCreationForm, UserRegistrationForm, LoginForm, EditUserForm
 from flask_paginate import Pagination, get_page_args
 from flask_mysqldb import MySQL
 from wtforms import Form, StringField, validators, PasswordField, TextAreaField
@@ -220,7 +220,27 @@ def manageUsers():
 		cur.execute(sql)
 		dataresults = cur.fetchall()
 
-		return render_template('manageUsers.html', msg1=status2, msg2=status3, RoleId=RoleId, dresults=dataresults, form=form)
+		if request.method == 'POST':
+			print("We are doing post")
+			#do post stuff
+		elif (request.method != 'POST') and ('userID' in request.args):
+				userid = request.args.get('userID')
+				i=0;
+				for row in (dataresults):
+					if str(row["UserEmail"]) == userid:
+						frmfname = dataresults[i]["FirstName"]
+						frmlname = dataresults[i]["LastName"]
+						frmphone = dataresults[i]["PhoneNumber"]
+						getroles()
+						i=0;
+						for row in (roleresults):
+							roleval = str(row['RoleName']);
+							roleid = str(row['RoleId']);
+							i = i + 1;
+							form.userRole.choices += [(roleid, roleval)]
+				return render_template('manageUsers.html', msg1=status2, msg2=status3, RoleId=RoleId, dresults=dataresults, form=form, updaterequest=True, eml=userid, fname=frmfname, lname=frmlname, phone=frmphone)
+		else:
+			return render_template('manageUsers.html', msg1=status2, msg2=status3, RoleId=RoleId, dresults=dataresults, form=form)
 	else:
 		return redirect(url_for('login' ))
 

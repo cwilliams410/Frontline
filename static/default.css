@@ -572,6 +572,20 @@
         margin: auto;
     }
 
+    .frm-drpdn2 {
+        text-align:left;
+        margin-left:0;
+        display:inline-block;
+        margin-right:auto;
+        width: 160px;
+        margin: auto;
+}
+    .regdisp{
+        width:350px;
+        background:white;
+    }
+
+
 
 /*********************************************************************************/
 /* formbottom                                                                   */
