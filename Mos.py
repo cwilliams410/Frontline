@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, url_for, flash, redirect, session, escape, Markup
-from forms import UserCreationForm, UserRegistrationForm, LoginForm, AddDogForm, EditDogForm, AddExpenseForm, AddUserForm, addadoptionForm,AdoptionApplicationForm, appreviewform2
+from forms import UserCreationForm, UserRegistrationForm, LoginForm, AddDogForm, EditDogForm, AddExpenseForm, AddUserForm, addadoptionForm,AdoptionApplicationForm, appreviewform2, EditUserForm
 from flask_paginate import Pagination, get_page_args
 from flask_mysqldb import MySQL
 from wtforms import Form, StringField, validators, PasswordField, TextAreaField
@@ -209,13 +209,18 @@ def dashboard():
 #@app.route('/manageUsers')
 @app.route('/manageUsers', methods = ['GET', 'POST'])
 def manageUsers():
+	form = EditUserForm()
+	cur = mysql.connection.cursor()
 	if  'username' in session:
 		username = session['username']
 		RoleId = session['role']
 		status2 = 'Logged in as: ' + session['firstname']
 		status3 = 'User Mode: ' + session['role']
+		sql = "SELECT * FROM UserInfo"
+		cur.execute(sql)
+		dataresults = cur.fetchall()
 
-		return render_template('manageUsers.html', msg1=status2, msg2=status3, RoleId=RoleId)
+		return render_template('manageUsers.html', msg1=status2, msg2=status3, RoleId=RoleId, dresults=dataresults, form=form)
 	else:
 		return redirect(url_for('login' ))
 

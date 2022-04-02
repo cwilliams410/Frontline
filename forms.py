@@ -58,6 +58,15 @@ class EditDogForm(FlaskForm):
 	submit = SubmitField('Complete Edit')
 
 
+class EditUserForm(FlaskForm):
+	MicrochipID = StringField('MicrochipID')
+	IsFixed = SelectField('Dog Altered Status (Fixed)', choices=[('', 'Select an Option'),('1', 'Yes'), ('0', 'No')], validators=[DataRequired()])
+	DogSex = SelectField('Dog Breed', choices=[('', 'Select an Option'),('Male', 'Male'), ('Female', 'Female')], validators=[DataRequired()])
+	DogBreed = SelectField('Select Applicable Dog Breed(s)', validators=[DataRequired()], choices=[])
+	submit = SubmitField('Complete Edit')
+
+
+
 class AddExpenseForm(FlaskForm):
 	ExpenseDescription = StringField('Enter an Expense Description', widget=TextArea())
 	ExpenseAmount = StringField('Enter an Expense Amount $:', validators=[DataRequired()])
