@@ -646,6 +646,9 @@
 .wrap-table100 {
   min-width: 800px;
   width: 100%;
+  background:white;
+  display:inline-block;
+  text-align:left;
 }
 
 /*//////////////////////////////////////////////////////////////////

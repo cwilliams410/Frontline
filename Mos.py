@@ -221,8 +221,28 @@ def manageUsers():
 		dataresults = cur.fetchall()
 
 		if request.method == 'POST':
-			print("We are doing post")
 			#do post stuff
+			Email = request.form['userEmail']
+			FirstName = request.form['firstName']
+			LastName = request.form['lastName']
+			Phone = request.form['phoneNumber']
+			Role = request.form['userRole']
+			if (request.form.get("disable") != None):
+				disable = 0
+			else:
+				disable = 1
+			if (request.form.get("approved") != None):
+				approved = 1
+			else:
+				approved = 0
+			sqlupd = "Update UserInfo SET UserEmail ='" +str(Email)+ "', FirstName ='" + str(FirstName) + "', LastName = '" + str(LastName) + "', PhoneNumber='" + str(Phone) + "', RoleId='" + str(Role) + "', IsEnabled=" + str(disable) + ", IsApproved=" + str(approved) + " WHERE UserEmail ='" + str(Email) + "'"
+			cur.execute(sqlupd)
+			mysql.connection.commit()
+			cur.close()
+			return render_template('manageUsers.html', msg1=status2, msg2=status3, RoleId=RoleId, dresults=dataresults, form=form)
+
+			#approved = request.form['approved']
+
 		elif (request.method != 'POST') and ('userID' in request.args):
 				userid = request.args.get('userID')
 				i=0;
