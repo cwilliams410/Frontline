@@ -73,29 +73,37 @@ def register():
 #Will update index to show dashboard once logged n
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-	form = LoginForm()
-	if request.method == 'POST':
-		uid = request.form["email"]
-		pwd = request.form["password"]
-		cur = mysql.connection.cursor()
-		#had to concatenate the strings to get this working - someone who knows python better can clean this up.
-		sql = "SELECT UserEmail, Passwrd FROM UserInfo WHERE UserEmail='" + str(uid) + "' AND Passwrd='" + str(pwd) + "'"
-		cur.execute(sql)
-		dataresults = cur.fetchall()
-		#Validate form submission and that sql returns at least one row Since email is unique we should never get more than 1
-		if form.validate_on_submit() and len(dataresults) == 1:
-			session['username'] = str(uid);
-			sql2 = "SELECT * FROM UserInfo WHERE UserEmail='" + uid + "'"
-			cur.execute(sql2)
-			dataresults = cur.fetchone()
-			return redirect(url_for('dashboard' ))
-			return render_template('dashboard.html', title='Frontline Savings Dashboard', uid = uid, dresult=dataresults)
-		else:
-			#redirect to login page if login unsuccessful
-			flash('Login Unsucessful')
-			return render_template('login.html', title='loginForm', form=form)
+	cur = mysql.connection.cursor()
+	if  'username' in session:
+		uid = session['username']
+		sql2 = "SELECT * FROM UserInfo WHERE UserEmail='" + uid + "'"
+		cur.execute(sql2)
+		dataresults = cur.fetchone()
+		return redirect(url_for('dashboard' ))
+		return render_template('dashboard.html', title='Frontline Savings Dashboard', uid = uid, dresult=dataresults)
 	else:
-		return render_template('login.html', title='loginForm', form=form)
+		form = LoginForm()
+		if request.method == 'POST':
+			uid = request.form["email"]
+			pwd = request.form["password"]
+			#had to concatenate the strings to get this working - someone who knows python better can clean this up.
+			sql = "SELECT UserEmail, Passwrd FROM UserInfo WHERE UserEmail='" + str(uid) + "' AND Passwrd='" + str(pwd) + "'"
+			cur.execute(sql)
+			dataresults = cur.fetchall()
+			#Validate form submission and that sql returns at least one row Since email is unique we should never get more than 1
+			if form.validate_on_submit() and len(dataresults) == 1:
+				session['username'] = str(uid);
+				sql2 = "SELECT * FROM UserInfo WHERE UserEmail='" + uid + "'"
+				cur.execute(sql2)
+				dataresults = cur.fetchone()
+				return redirect(url_for('dashboard' ))
+				return render_template('dashboard.html', title='Frontline Savings Dashboard', uid = uid, dresult=dataresults)
+			else:
+				#redirect to login page if login unsuccessful
+				flash('Login Unsucessful')
+				return render_template('login.html', title='loginForm', form=form)
+		else:
+			return render_template('login.html', title='loginForm', form=form)
 
 
 
