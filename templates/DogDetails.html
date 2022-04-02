@@ -17,44 +17,9 @@
 												<fieldset> 
 													<legend>Dog Details</legend>
 														<table >
-															{% if agesyears is defined and agesyears > 0 %}
-																{% set agesyears = dresults.Months//12 %}
-															{%else %}
-																{% set agesyears = dresults.Months//12 %}
-															{% endif %}
-															{% if agesmonths is defined and agesmonths> 0 %}
-																{% set agesmonths = dresults.Months%12 %}
-															{%else %}
-																{% set agesmonths = dresults.Months%12 %}
-															{% endif %}
 
-															{% if agesmonths == 1 %}
-																{% set monthsval = 'Month' %}
-															{%endif %}
-															{% if agesmonths != 1 %}
-																{% set monthsval = 'Months' %}
-															{%endif %}
-															{% if agesyears == 1 %}
-																{% set yrval = 'Yr' %}
-															{%endif %}
-															{% if agesyears != 1 %}
-																{% set yrval = 'Yrs' %}
-															{%endif %}
-
-															{% if dresults.AdoptStatus == 0 %}
-																{% set anchortype = "href" %}
-																{% set classname = "adopt_btn" %}
-																{% set adoptval = request.args.get('dogID') %}
-																{% set adoptlink2 = adoptval %}
-															{% endif %}
-
-															{% if dresults.AdoptStatus != 0 %}
-																{% set anchortype = "name" %}
-																{% set classname = "adopted_btn" %}
-															{% endif %}
-
-														<tr><td width="150px">Dog Name: </td><td style="width:250px">{{ dresults.DogName }}</td></tr>
-														<tr><td width="150px">Dog Breed</td><td>
+														<tr><td width="150px">User Name: </td><td style="width:250px">{{ dresults.DogName }}</td></tr>
+														<tr><td width="150px">User Role</td><td>
 														{% if dresults.combinedbreed == 'unknown'%}
 															{{ form.DogBreed(rows=6, multiple=True) }}
 														{% elif dresults.combinedbreed == 'mixed'%}
@@ -65,7 +30,7 @@
 															{{ dresults.combinedbreed }}
 														{% endif %}
 														</td></tr>
-														<tr><td width="150px">Dog Sex</td>
+														<tr><td width="150px">Signup Date</td>
 															<td>
 														{% if dresults.Dogsex == 'unknown' %}
 															{{ form.DogSex }}
@@ -73,8 +38,8 @@
 															{{ dresults.Dogsex }}
 														{% endif %}
 														</td></tr>
-														<tr><td width="150px">Dog Age</td><td>{{ agesyears }} {{ yrval }} - {{ agesmonths }} {{ monthsval }}</td></tr>
-														<tr><td width="150px">Altered</td><td>{{ dresults.DogAlterStatus }}</td></tr>
+														<tr><td width="150px">Approval Status</td><td>{{ agesyears }} {{ yrval }} - {{ agesmonths }} {{ monthsval }}</td></tr>
+														<tr><td width="150px">Account Status</td><td>{{ dresults.DogAlterStatus }}</td></tr>
 														<tr><td width="150px">Dog Description</td><td>{{ dresults.DogDescription }}</td></tr>
 														<tr><td width="150px">Microchip ID</td><td>
 														{% if dresults.MicrochipID == '' %}

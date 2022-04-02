@@ -60,8 +60,6 @@ def getuserdet(uid):
 	uresults = cur.fetchone()
 	return uresults
 
-
-
 #route for root and home
 @app.route('/')
 @app.route('/home')
@@ -104,7 +102,6 @@ def register():
 			return render_template('register.html', title='Registration Failed -- Try Again')
 
 
-
 #route for User Creation
 @app.route('/createUser', methods = ['GET', 'POST'])
 def createUser():
@@ -145,7 +142,6 @@ def createUser():
 			return render_template('dashboard.html', title='Frontline Savings Dashboard', uid = uid, RoleId=RoleId, actionmsg = actionmsg)
 	else:
 		return redirect('login')
-
 
 
 
@@ -194,8 +190,6 @@ def login():
 
 
 
-    
-
 #@app.route('/dashboard')
 @app.route('/dashboard', methods = ['GET', 'POST'])
 def dashboard():
@@ -210,6 +204,20 @@ def dashboard():
 		return redirect(url_for('login' ))
 
 
+
+
+#@app.route('/manageUsers')
+@app.route('/manageUsers', methods = ['GET', 'POST'])
+def manageUsers():
+	if  'username' in session:
+		username = session['username']
+		RoleId = session['role']
+		status2 = 'Logged in as: ' + session['firstname']
+		status3 = 'User Mode: ' + session['role']
+
+		return render_template('manageUsers.html', msg1=status2, msg2=status3, RoleId=RoleId)
+	else:
+		return redirect(url_for('login' ))
 
 
 
